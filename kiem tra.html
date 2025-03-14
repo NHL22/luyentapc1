@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiểm Tra Bảng Cộng Trừ</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .container { width: 80%; margin: auto; }
+        .input-group { margin: 10px 0; display: flex; justify-content: space-between; align-items: center; }
+        .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 20px; text-align: center; }
+        .question { padding: 5px; border-bottom: 1px dashed black; text-align: left; }
+        .dashed-input { border: none; border-bottom: 1px dashed black; text-align: center; width: 200px; }
+        .input-group-inline { display: flex; justify-content: space-between; margin-top: 20px; }
+        .left { text-align: left; }
+        .right { text-align: right; }
+        @media print {
+            button, .input-group:nth-of-type(2), .input-group:nth-of-type(3) { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Kiểm Tra Bảng Cộng Trừ</h1>
+    <div class="container">
+        <div class="input-group">
+            <label>Họ và tên học sinh:..................</label>
+            <label>Điểm:.....................</label>
+        </div>
+        <div class="input-group">
+            <label>Giới hạn số: <input type="number" id="maxNumber" value="10" min="1"></label>
+            <label>Số lượng câu hỏi: <input type="number" id="questionCount" value="30" min="1"></label>
+        </div>
+        <div class="input-group">
+            <label><input type="radio" name="mode" value="add" checked> Bảng Cộng</label>
+            <label><input type="radio" name="mode" value="sub"> Bảng Trừ</label>
+            <label><input type="radio" name="mode" value="mul"> Bảng Nhân</label>
+            <label><input type="radio" name="mode" value="div"> Bảng Chia</label>
+            <label><input type="radio" name="mode" value="addsub"> Lẫn Lộn Cộng Trừ</label>
+            <label><input type="radio" name="mode" value="muldiv"> Lẫn Lộn Nhân Chia</label>
+        </div>
+        <button onclick="generateQuestions()">Tạo Bài Kiểm Tra</button>
+        <button onclick="window.print()">In Bài Kiểm Tra</button>
+        <p>Ngày kiểm tra: <span id="testDate"></span></p>
+        <div class="grid" id="questions"></div>
+        <div class="input-group-inline">
+            <label class="left">Số câu sai:...............</label>
+            <label class="right">Kiểm tra bởi:................</label>
+        </div>
+    </div>
+    
+    <script>
+        function getRandomNumber(max) {
+            return Math.floor(Math.random() * (max + 1));
+        }
+
+        function generateQuestions() {
+            let maxNumber = parseInt(document.getElementById('maxNumber').value) || 10;
+            let questionCount = parseInt(document.getElementById('questionCount').value) || 30;
+            let mode = document.querySelector('input[name="mode"]:checked').value;
+            let questionsContainer = document.getElementById("questions");
+            questionsContainer.innerHTML = "";
+            
+            for (let i = 0; i < questionCount; i++) {
+                for (let j = 0; j < 6; j++) {
+                    let a = getRandomNumber(maxNumber);
+                    let b = getRandomNumber(maxNumber);
+                    let question = "";
+                    
+                    switch(mode) {
+                        case "add":
+                            question = `${a} + ${b} = `;
+                            break;
+                        case "sub":
+                            question = `${a + b} - ${b} = `;
+                            break;
+                        case "mul":
+                            question = `${a} × ${b} = `;
+                            break;
+                        case "div":
+                            question = `${a * b} ÷ ${b} = `;
+                            break;
+                        case "addsub":
+                            question = Math.random() > 0.5 ? `${a} + ${b} = ` : `${a + b} - ${b} = `;
+                            break;
+                        case "muldiv":
+                            question = Math.random() > 0.5 ? `${a} × ${b} = ` : `${a * b} ÷ ${b} = `;
+                            break;
+                    }
+                    
+                    let div = document.createElement("div");
+                    div.className = "question";
+                    div.innerText = question;
+                    questionsContainer.appendChild(div);
+                }
+            }
+        }
+
+        document.getElementById("testDate").innerText = new Date().toLocaleDateString("vi-VN");
+        generateQuestions();
+    </script>
+</body>
+</html>
